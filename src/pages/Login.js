@@ -4,11 +4,11 @@ import { AiFillFacebook } from "react-icons/ai";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setUser } from "../store/auth";
 
-import { login } from "src/firebase";
+import { login } from "../firebase";
 
 import { Formik, Form } from "formik";
 
-import { LoginSchema } from "src/validation";
+import { LoginSchema } from "../validation";
 
 export default function Login() {
 

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import Search from "./Search"
-import { logout } from "src/firebase"
+import { logout } from "../firebase"
 
 export default function Header() {
     return(
