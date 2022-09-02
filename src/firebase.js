@@ -1,12 +1,21 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signOut, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 
 import { userHandle } from "./utils";
+
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,30 +24,82 @@ const firebaseConfig = {
   projectId: "instagram-web-clone-2e9af",
   storageBucket: "instagram-web-clone-2e9af.appspot.com",
   messagingSenderId: "107723935159",
-  appId: "1:107723935159:web:034848c1e2f94f48f76c32"
+  appId: "1:107723935159:web:034848c1e2f94f48f76c32",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
-onAuthStateChanged(auth, (user)=>{
-  userHandle(user || false)
-}) //auth ile ilgili bir değişiklik olduğunda
+const db = getFirestore(app); //db oluşturuldu
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const dbUser = await getDoc(doc(db, "users", user.uid))
+    let data= {
+      uid: user.uid,
+      fullName: user.displayName,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      ...dbUser.data()
+    }
+    userHandle(user);
+  } else {
+    userHandle(false);
+  }
+}); //auth ile ilgili bir değişiklik olduğunda
 
 export const login = async (email, password) => {
-    try{
-    const response = await signInWithEmailAndPassword(auth, email, password)
-    console.log(response)
-    } catch (err) {
-        toast.error(err.code)
-    }
+  try {
+    return await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    toast.error(err.code);
+  }
+};
+
+export const register = async ({email, full_name, username, password}) => {
+	try {
+		const user = await getDoc(doc(db, "usernames", username))
+		if (user.exists()) {
+			toast.error(`${username} kullanıcı adı başkası tarafından kullanılıyor.`)
+		} else {
+			const response = await createUserWithEmailAndPassword(auth, email, password)
+			if (response.user) {
+
+				await setDoc(doc(db, "usernames", username), {
+					user_id: response.user.uid
+				})
+
+				await setDoc(doc(db, "users", response.user.uid), {
+					fullName: full_name,
+					username: username,
+					followers: [],
+					following: [],
+					notifications: [],
+					website: '',
+					bio: '',
+					phoneNumber: '',
+					gender: '',
+					posts: 0
+				})
+
+				await updateProfile(auth.currentUser, {
+					displayName: full_name
+				})
+
+				return response.user
+
+			}
+		}
+	} catch (err) {
+		toast.error(err.code)
+	}
 }
 
 export const logout = async () => {
-  try{
-    await signOut(auth)
-  } catch(err) {
-    toast.error(err.code)
+  try {
+    await signOut(auth);
+  } catch (err) {
+    toast.error(err.code);
   }
-}
+};

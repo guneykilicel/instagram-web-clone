@@ -10,25 +10,14 @@ function App() {
 
   const user = useSelector(state => state.auth.user)
   const showRoutes = useRoutes(routes)
-  const [redirect, setRedirect] = useState(false)
 
-  useEffect(()=>{
-    let timeout = setTimeout(()=> {
-      setRedirect(true)
-    },1000)
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [])
-
-  if(!user && !redirect) {
-    return (
-      <Loader />
-    )
+  if(user === null) {
+    return <Loader />
   }
 
   return (
     <>
+    {/* <pre>{JSON.stringify(user,null,2)}</pre> */}
     <Toaster position="top-right" />
       {showRoutes}
     </>
