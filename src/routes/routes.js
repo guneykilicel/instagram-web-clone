@@ -1,5 +1,7 @@
 import PrivateRoute from "../components/PrivateRoute"
-import Home from "../pages/Home"
+import MainLayout from "pages/layout"
+import Profile from "pages/profile"
+import Home from "pages/home"
 import AuthLayout from "../pages/auth"
 import Login from "../pages/auth/Login"
 import Register from "../pages/auth/Register"
@@ -7,8 +9,18 @@ import Register from "../pages/auth/Register"
 const routes = [
     {
         path: '/',
-        element: <Home />,
-        auth: true
+        element: <MainLayout />,
+        auth: true,
+        children: [
+            {
+                index: true,
+                element: <Home />
+            },
+            {
+                path: ':username',
+                element: <Profile />
+            }
+        ]
     },
     {
         path: '/auth',
