@@ -10,6 +10,7 @@ import { Formik, Form } from "formik";
 
 import { RegisterSchema } from "validation";
 import Separator from "components/Separator";
+import { Helmet } from "react-helmet";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -26,6 +27,9 @@ export default function Register() {
 
   return (
     <>
+    <Helmet>
+				<title>Register • Instagram</title>
+			</Helmet>
       <div className="w-[350px] grid gap-y-2.5">
         <div className="bg-white border px-[40px] pt-10 pb-2 ">
           <a href="#" className="flex justify-center">

@@ -1,10 +1,16 @@
 import PrivateRoute from "../components/PrivateRoute"
 import MainLayout from "pages/layout"
-import Profile from "pages/profile"
+import ProfileLayout from "pages/profile"
+import ProfilePosts from "pages/profile/components/posts"
+import ProfileTagged from "pages/profile/components/tagged"
 import Home from "pages/home"
 import AuthLayout from "../pages/auth"
 import Login from "../pages/auth/Login"
 import Register from "../pages/auth/Register"
+import Logout from "pages/logout"
+import InboxLayout from "pages/inbox"
+import Inbox from "pages/inbox/inbox"
+import Chat from "pages/inbox/chat"
 
 const routes = [
     {
@@ -13,13 +19,41 @@ const routes = [
         auth: true,
         children: [
             {
-                index: true,
-                element: <Home />
-            },
+				index: true,
+				element: <Home />
+			},
+			{
+				path: 'logout',
+				element: <Logout />
+			},
+			{
+				path: ':username',
+				element: <ProfileLayout />,
+				children: [
+					{
+						index: true,
+						element: <ProfilePosts />
+					},
+					{
+						path: 'tagged',
+						element: <ProfileTagged />
+					}
+				]
+			},
             {
-                path: ':username',
-                element: <Profile />
-            }
+                path: 'inbox',
+                element: <InboxLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <Inbox />
+                    },
+                    {
+                        path: ':conversationId',
+                        element: <Chat />
+                    }
+                ]
+            },
         ]
     },
     {

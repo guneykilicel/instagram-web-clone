@@ -1,9 +1,26 @@
 import { Link, NavLink } from "react-router-dom";
 import Search from "./Search";
-import { logout } from "../firebase";
+import { getInfoo, logout } from "../firebase";
 import Icon from "./Icon";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 export default function Header() {
+
+  const user = useSelector(state => state.auth.user)
+
+  // const [userT, setUserT] = useState(null)
+
+  // useEffect(() => {
+	// 	getInfoo(user.uid)
+	// 		.then(user => {
+	// 			setUserT(user)
+	// 		})
+	// 		.catch(err => {
+	// 			setUserT(false)
+	// 		})
+	// }, [])
+
   return (
     <header className="bg-white border-b border-gray-300">
       <div className="flex items-center justify-between h-[60px] container mx-auto">
@@ -16,11 +33,11 @@ export default function Header() {
 
         <Search />
 
-        <nav className="flex items-center gap-x-6">
+        <nav className="flex items-center gap-x-5">
           <NavLink to="/">
             <Icon name="home" size={24} />
           </NavLink>
-          <NavLink to="/">
+          <NavLink to="/inbox">
             <Icon name="direct" size={24} />
           </NavLink>
           <NavLink to="/">
@@ -29,11 +46,14 @@ export default function Header() {
           <NavLink to="/">
             <Icon name="heart" size={24} />
           </NavLink>
-          <button onClick={logout}>
+          <NavLink to={`/${user.username}`}>
             <img src="/no-avatar.jpg" className="w-6 h-6 rounded-full" />
-          </button>
+          </NavLink>
         </nav>
       </div>
+      <div>
+      </div>
     </header>
+    
   );
 }

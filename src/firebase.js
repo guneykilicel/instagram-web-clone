@@ -17,6 +17,8 @@ import { userHandle } from "./utils";
 
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
+import { collection, getDocs } from "firebase/firestore";
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA7kE14AmZ_-aWnMc_i9_4WAI42Y3dEXAc",
@@ -31,7 +33,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
-const db = getFirestore(app); //db oluşturuldu
+export const db = getFirestore(app); //db oluşturuldu
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -43,7 +45,7 @@ onAuthStateChanged(auth, async (user) => {
       emailVerified: user.emailVerified,
       ...dbUser.data()
     }
-    userHandle(user);
+    userHandle(data);
   } else {
     userHandle(false);
   }
@@ -57,15 +59,27 @@ export const login = async (email, password) => {
   }
 };
 
-export const getUserInfo = async (uname)=>{
-  const username = await getDoc(doc(db, "usernames", uname))
-  if(username.exists) {
-    return (await getDoc(doc(db, "users", username.data().user_id))).data()
-  } else {
-    toast.error("Kullanıcı bulunamadı!")
-    throw new Error("Kullanıcı bulunamadı!")
-  }
+export const getUserInfo = async uname => {
+	const username = await getDoc(doc(db, "usernames", uname))
+	if (username.exists()) {
+		return (await getDoc(doc(db, "users", username.data().user_id))).data()
+	} else {
+		toast.error("Kullanıcı bulunamadı!")
+		throw new Error("Kullanıcı bulunamadı!")
+	}
 }
+
+// // for Header
+// export const getInfoo = async (uid) => {
+//   const docRef = doc(db, "users", uid);
+//   const docSnap = await getDoc(docRef);
+//   if (docSnap.exists()) {
+//     return docSnap.data()
+//   } else {
+//     // doc.data() will be undefined in this case
+//     console.log("No such document!");
+//   }
+// }
 
 export const register = async ({email, full_name, username, password}) => {
 	try {

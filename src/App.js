@@ -17,7 +17,7 @@ function App() {
 
   return (
     <>
-    {/* <pre>{JSON.stringify(user,null,2)}</pre> */}
+    {/* { <pre>{JSON.stringify(user,null,2)}</pre>} */}
     <Toaster position="top-right" />
       {showRoutes}
     </>

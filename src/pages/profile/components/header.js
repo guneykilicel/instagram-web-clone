@@ -2,7 +2,7 @@
 
 const Header = ({user})=>{
     return(
-        <header className="flex items-center px-24 gap-x-24 py-6">
+        <header className="flex items-center px-24 gap-x-24 py-4 pb-10">
             <img src="/no-avatar.jpg" className="w-[150px] h-[150px] rounded-full" />
             <div>
                 <div className="mb-6">
