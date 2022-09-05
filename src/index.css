@@ -10,5 +10,9 @@
     width: 935px !important;
     max-width: 100%;
   }
-
+}
+@layer components {
+  .messages-box > div {
+    @apply flex flex-col gap-y-2
+  }
 }
